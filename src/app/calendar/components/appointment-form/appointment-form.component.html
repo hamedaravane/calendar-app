@@ -1,0 +1,47 @@
+<h2 mat-dialog-title>{{ data.appointment ? 'Edit' : 'Create' }} Appointment</h2>
+<mat-dialog-content [formGroup]="appointmentForm">
+  <mat-form-field appearance="fill">
+    <mat-label>Title</mat-label>
+    <input matInput formControlName="title" />
+    <mat-error *ngIf="appointmentForm.get('title')?.hasError('required')">
+      Title is required
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Date</mat-label>
+    <input matInput [matDatepicker]="picker" formControlName="date" />
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker touchUi #picker></mat-datepicker>
+    <mat-error *ngIf="appointmentForm.get('date')?.hasError('required')">
+      Date is required
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Start Time</mat-label>
+    <input matInput formControlName="startTime" placeholder="HH:mm" />
+    <mat-error *ngIf="appointmentForm.get('startTime')?.hasError('required')">
+      Start Time is required
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>End Time</mat-label>
+    <input matInput formControlName="endTime" placeholder="HH:mm" />
+    <mat-error *ngIf="appointmentForm.get('endTime')?.hasError('required')">
+      End Time is required
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Description</mat-label>
+    <textarea matInput formControlName="description"></textarea>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancel()">Cancel</button>
+  <button mat-button color="primary" (click)="save()" [disabled]="!appointmentForm.valid">
+    Save
+  </button>
+</mat-dialog-actions>
