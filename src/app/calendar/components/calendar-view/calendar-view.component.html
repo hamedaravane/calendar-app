@@ -1,45 +1,115 @@
+<!-- calendar-view.component.html -->
 <app-header
   (dateChanged)="onDateChanged($event)"
   (viewChanged)="onViewChanged($event)"
 ></app-header>
-<div class="calendar">
-  <div class="time-slot" *ngFor="let hour of hours">
-    <div class="slot" (click)="openAppointmentForm(selectedDate.setHours(hour, 0, 0, 0))">
-      <div class="slot-time">{{ hour | number: '2.0' }}:00</div>
-      <div class="appointments">
-        <div
-          class="appointment"
-          *ngFor="let appointment of getAppointmentsForHour(hour, false)"
-          cdkDrag
-          (cdkDragEnded)="onDragEnded($event, appointment)"
-        >
-          <div class="appointment-content">
-            <span>{{ appointment.title }}</span>
-            <button mat-icon-button (click)="deleteAppointment(appointment)">
-              <mat-icon>delete</mat-icon>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
 
-    <div class="slot" (click)="openAppointmentForm(selectedDate.setHours(hour, 30, 0, 0))">
-      <div class="slot-time">{{ hour | number: '2.0' }}:30</div>
-      <div class="appointments">
-        <div
-          class="appointment"
-          *ngFor="let appointment of getAppointmentsForHour(hour, true)"
-          cdkDrag
-          (cdkDragEnded)="onDragEnded($event, appointment)"
-        >
-          <div class="appointment-content">
-            <span>{{ appointment.title }}</span>
-            <button mat-icon-button (click)="deleteAppointment(appointment)">
-              <mat-icon>delete</mat-icon>
-            </button>
+@switch (selectedView) {
+  @case ('Week') {
+    <div class="calendar-week">
+      <!-- Week View -->
+      <div class="week-days">
+        <div class="day-column" *ngFor="let date of currentDates">
+          <div class="day-header">
+            {{ date | date: 'EEE, MMM d' }}
+          </div>
+          <div class="day-content">
+            <div
+              class="time-slot"
+              *ngFor="let hour of hours"
+              (click)="openAppointmentForm(setTime(date, hour, 0))"
+            >
+              <div class="appointments">
+                <div
+                  class="appointment"
+                  *ngFor="let appointment of getAppointmentsForHour(hour, false, date)"
+                  cdkDrag
+                  (cdkDragEnded)="onDragEnded($event, appointment)"
+                >
+                  <div class="appointment-content">
+                    <span>{{ appointment.title }}</span>
+                    <button mat-icon-button (click)="deleteAppointment(appointment)">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Half-hour slots can be added similarly -->
           </div>
         </div>
       </div>
     </div>
-  </div>
-</div>
+  }
+  @case ('Day') {
+    <div class="calendar">
+      <div class="time-slot" *ngFor="let hour of hours">
+        <div
+          class="slot"
+          (click)="openAppointmentForm(setTime(selectedDate, hour, 0))"
+        >
+          <div class="slot-time">{{ hour | number: '2.0' }}:00</div>
+          <div class="appointments">
+            <div
+              class="appointment"
+              *ngFor="let appointment of getAppointmentsForHour(hour, false, selectedDate)"
+              cdkDrag
+              (cdkDragEnded)="onDragEnded($event, appointment)"
+            >
+              <div class="appointment-content">
+                <span>{{ appointment.title }}</span>
+                <button mat-icon-button (click)="deleteAppointment(appointment)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Half hour slot -->
+        <div
+          class="slot"
+          (click)="openAppointmentForm(setTime(selectedDate, hour, 30))"
+        >
+          <div class="slot-time">{{ hour | number: '2.0' }}:30</div>
+          <div class="appointments">
+            <div
+              class="appointment"
+              *ngFor="let appointment of getAppointmentsForHour(hour, true, selectedDate)"
+              cdkDrag
+              (cdkDragEnded)="onDragEnded($event, appointment)"
+            >
+              <div class="appointment-content">
+                <span>{{ appointment.title }}</span>
+                <button mat-icon-button (click)="deleteAppointment(appointment)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+  @case ('Month') {
+    <div class="calendar-month">
+      <!-- Month View -->
+      <div class="month-grid">
+        <div class="month-day" *ngFor="let date of currentDates">
+          <div class="day-header">
+            {{ date | date: 'd' }}
+          </div>
+          <div class="day-content">
+            <div
+              class="appointment"
+              *ngFor="let appointment of getAppointmentsForDate(date)"
+              (click)="openAppointmentForm(date)"
+            >
+              <span>{{ appointment.title }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+}

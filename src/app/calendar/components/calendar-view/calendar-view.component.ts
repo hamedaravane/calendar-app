@@ -1,62 +1,107 @@
-// calendar-view.component.ts
-import {Component, OnInit} from '@angular/core';
-import {MatDialog} from '@angular/material/dialog';
-import {CdkDragEnd, DragDropModule} from '@angular/cdk/drag-drop';
-import {Appointment} from '../../entity/appointment.entity';
-import {AppointmentService} from '../../services/appointment.service';
-import {AppointmentFormComponent} from '../appointment-form/appointment-form.component';
-import {DecimalPipe, NgForOf} from '@angular/common';
-import {MatButtonModule} from '@angular/material/button';
-import {MatIconModule} from '@angular/material/icon';
+import { Component, OnInit, inject } from '@angular/core';
+import { NgForOf, DecimalPipe, DatePipe } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { DragDropModule, CdkDragEnd } from '@angular/cdk/drag-drop';
+import { MatDialog } from '@angular/material/dialog';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { DestroyRef } from '@angular/core';
 import {HeaderComponent} from '../header/header.component';
+import {AppointmentService} from '../../services/appointment.service';
+import {Appointment} from '../../entity/appointment.entity';
+import {AppointmentFormComponent} from '../appointment-form/appointment-form.component';
 
 @Component({
   standalone: true,
   selector: 'app-calendar-view',
   templateUrl: './calendar-view.component.html',
+  styleUrls: ['./calendar-view.component.scss'],
   imports: [
     NgForOf,
     DecimalPipe,
+    DatePipe,
     MatButtonModule,
     MatIconModule,
     DragDropModule,
-    HeaderComponent
-  ]
+    HeaderComponent,
+  ],
 })
 export class CalendarViewComponent implements OnInit {
+  private readonly appointmentService = inject(AppointmentService);
+  private readonly dialog = inject(MatDialog);
+  private readonly destroyRef = inject(DestroyRef);
+
   appointments: Appointment[] = [];
   hours: number[] = [];
   selectedDate: Date = new Date();
-  selectedView: string = 'Day';
-
-  constructor(
-    private appointmentService: AppointmentService,
-    private dialog: MatDialog
-  ) {}
+  selectedView: 'Day' | 'Week' | 'Month' = 'Day';
+  currentDates: Date[] = [];
 
   ngOnInit(): void {
-    this.hours = Array.from({ length: 24 }, (_, i) => i); // Generate hours 0 to 23
+    this.hours = Array.from({ length: 24 }, (_, i) => i);
 
-    this.appointmentService.appointments$.subscribe((appointments) => {
-      this.appointments = appointments;
-    });
+    this.appointmentService.appointments$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((appointments) => {
+        this.appointments = appointments;
+      });
+
+    this.updateCurrentDates();
   }
 
   onDateChanged(date: Date): void {
     this.selectedDate = date;
-    // Update the calendar display based on the new date
+    this.updateCurrentDates();
   }
 
-  onViewChanged(view: string): void {
+  onViewChanged(view: 'Day' | 'Week' | 'Month'): void {
     this.selectedView = view;
-    // Update the calendar display based on the new view
+    this.updateCurrentDates();
   }
 
-  openAppointmentForm(date: number): void {
-    const formattedData = new Date(date);
+  updateCurrentDates(): void {
+    switch (this.selectedView) {
+      case 'Day':
+        this.currentDates = [this.selectedDate];
+        break;
+      case 'Week':
+        this.currentDates = this.getWeekDates(this.selectedDate);
+        break;
+      case 'Month':
+        this.currentDates = this.getMonthDates(this.selectedDate);
+        break;
+    }
+  }
+
+  getWeekDates(date: Date): Date[] {
+    const startOfWeek = new Date(date);
+    const day = startOfWeek.getDay(); // 0 (Sun) to 6 (Sat)
+    const diff = startOfWeek.getDate() - day + (day === 0 ? -6 : 1); // Adjust if week starts on Monday
+    startOfWeek.setDate(diff);
+
+    return Array.from({ length: 7 }, (_, i) => {
+      const d = new Date(startOfWeek);
+      d.setDate(d.getDate() + i);
+      return d;
+    });
+  }
+
+  getMonthDates(date: Date): Date[] {
+    const year = date.getFullYear();
+    const month = date.getMonth();
+
+    const firstDay = new Date(year, month, 1);
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    return Array.from({ length: daysInMonth }, (_, i) => {
+      return new Date(year, month, i + 1);
+    });
+  }
+
+  openAppointmentForm(date: Date): void {
     const dialogRef = this.dialog.open(AppointmentFormComponent, {
       width: '400px',
-      data: { formattedData },
+      data: { date },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
@@ -74,20 +119,15 @@ export class CalendarViewComponent implements OnInit {
     });
   }
 
-  getAppointmentsForHour(hour: number, halfHour: boolean): Appointment[] {
-    const time = `${hour}:${halfHour ? '30' : '00'}`;
-    return this.appointments.filter((appt) => {
-      const apptDate = new Date(appt.date);
-      return (
-        apptDate.toDateString() === this.selectedDate.toDateString() &&
-        appt.startTime === time
-      );
-    });
+  getAppointmentsForDate(date: Date): Appointment[] {
+    return this.appointments.filter(
+      (appt) => new Date(appt.date).toDateString() === date.toDateString()
+    );
   }
 
   onDragEnded(event: CdkDragEnd, appointment: Appointment): void {
     const deltaY = event.distance.y;
-    const minutesMoved = Math.round(deltaY / 50) * 30; // Assuming 50px per 30 minutes
+    const minutesMoved = Math.round(deltaY / 50) * 30; // Adjust based on your UI
     const newStart = this.adjustTime(appointment.startTime, minutesMoved);
     const newEnd = this.adjustTime(appointment.endTime, minutesMoved);
 
@@ -111,5 +151,22 @@ export class CalendarViewComponent implements OnInit {
 
   deleteAppointment(appointment: Appointment): void {
     this.appointmentService.deleteAppointment(appointment.id);
+  }
+
+  setTime(date: Date, hour: number, minute: number): Date {
+    const newDate = new Date(date);
+    newDate.setHours(hour, minute, 0, 0);
+    return newDate;
+  }
+
+  getAppointmentsForHour(hour: number, halfHour: boolean, date: Date): Appointment[] {
+    const time = `${hour.toString().padStart(2, '0')}:${halfHour ? '30' : '00'}`;
+    return this.appointments.filter((appt) => {
+      const apptDate = new Date(appt.date);
+      return (
+        apptDate.toDateString() === date.toDateString() &&
+        appt.startTime === time
+      );
+    });
   }
 }

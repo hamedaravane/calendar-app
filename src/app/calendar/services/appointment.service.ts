@@ -9,8 +9,6 @@ export class AppointmentService {
   private appointmentsSubject = new BehaviorSubject<Appointment[]>([]);
   public appointments$ = this.appointmentsSubject.asObservable();
 
-  constructor() {}
-
   getAppointments(): Appointment[] {
     return this.appointmentsSubject.getValue();
   }

@@ -1,23 +1,20 @@
-<!-- header.component.html -->
-<mat-toolbar color="primary">
-  <div class="left-section">
-    <span class="logo">Calendar App</span>
+<mat-toolbar color="primary" style="height: 5rem">
+  <div style="display: flex; align-items: center; gap: 1rem">
+    <h1>Calendar App</h1>
     <button mat-button (click)="goToToday()">Today</button>
     <button mat-icon-button (click)="previousDate()">
       <mat-icon>chevron_left</mat-icon>
     </button>
-    <span class="date-display">{{ selectedDate | date: 'MMMM d, y' }}</span>
+    <span style="font-size: 0.625em">{{ selectedDate | date: 'MMMM d, y' }}</span>
     <button mat-icon-button (click)="nextDate()">
       <mat-icon>chevron_right</mat-icon>
     </button>
   </div>
-  <span class="spacer"></span>
-  <div class="right-section">
-    <mat-form-field appearance="fill" class="view-selector">
-      <mat-label>View</mat-label>
-      <mat-select [(value)]="selectedView" (selectionChange)="onViewChange($event.value)">
-        <mat-option *ngFor="let view of viewTypes" [value]="view">{{ view }}</mat-option>
-      </mat-select>
-    </mat-form-field>
-  </div>
+  <span style="flex: 1 1 auto"></span>
+  <mat-form-field subscriptSizing="dynamic" style="width: 100px" appearance="outline">
+    <mat-label>View</mat-label>
+    <mat-select [(value)]="selectedView" (selectionChange)="onViewChange($event.value)">
+      <mat-option *ngFor="let view of ['Day', 'Week', 'Month']" [value]="view">{{ view }}</mat-option>
+    </mat-select>
+  </mat-form-field>
 </mat-toolbar>

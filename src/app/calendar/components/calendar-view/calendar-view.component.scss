@@ -1,0 +1,107 @@
+.calendar {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.time-slot {
+  display: flex;
+  flex-direction: column;
+}
+
+.slot {
+  position: relative;
+  border-bottom: 1px solid #e0e0e0;
+  height: 50px;
+  cursor: pointer;
+}
+
+.slot-time {
+  position: absolute;
+  left: 0;
+  width: 60px;
+  text-align: right;
+  padding-right: 10px;
+  line-height: 50px;
+}
+
+.appointments {
+  margin-left: 70px;
+  height: 100%;
+  position: relative;
+}
+
+.appointment {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: calc(100% - 10px);
+  background-color: #bbdefb;
+  border: 1px solid #90caf9;
+  border-radius: 4px;
+  padding: 5px;
+  box-sizing: border-box;
+  cursor: move;
+}
+
+.appointment-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.calendar-week {
+  display: flex;
+}
+
+.day-column {
+  flex: 1;
+  border: 1px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
+}
+
+.day-header {
+  background-color: #f5f5f5;
+  padding: 5px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.day-content {
+  flex: 1;
+  overflow: hidden;
+}
+
+.month-grid {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.month-day {
+  width: calc(100% / 7); /* 7 days a week */
+  border: 1px solid #e0e0e0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.month-day .day-header {
+  background-color: #f5f5f5;
+  padding: 5px;
+  text-align: right;
+  font-weight: bold;
+}
+
+.month-day .day-content {
+  flex: 1;
+  padding: 5px;
+}
+
+.month-day .appointment {
+  background-color: #bbdefb;
+  border-radius: 4px;
+  padding: 2px;
+  margin-bottom: 2px;
+  cursor: pointer;
+}

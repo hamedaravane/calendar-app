@@ -1,5 +1,4 @@
-// header.component.ts
-import {Component, EventEmitter, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Output} from '@angular/core';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
@@ -11,18 +10,15 @@ import {DatePipe, NgForOf} from '@angular/common';
   standalone: true,
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatToolbarModule, MatButtonModule, MatIconModule, MatFormFieldModule, MatSelectModule, DatePipe, NgForOf]
 })
 export class HeaderComponent {
   @Output() dateChanged = new EventEmitter<Date>();
-  @Output() viewChanged = new EventEmitter<string>();
+  @Output() viewChanged = new EventEmitter<'Day' | 'Week' | 'Month'>();
 
-  selectedDate: Date = new Date();
-  viewTypes: string[] = ['Day', 'Week', 'Month'];
-  selectedView: string = 'Day';
-
-  constructor() {}
+  selectedDate = new Date();
+  selectedView: 'Day' | 'Week' | 'Month' = 'Day';
 
   goToToday(): void {
     this.selectedDate = new Date();
@@ -30,36 +26,40 @@ export class HeaderComponent {
   }
 
   previousDate(): void {
+    const temp = this.selectedDate;
     switch (this.selectedView) {
       case 'Day':
-        this.selectedDate.setDate(this.selectedDate.getDate() - 1);
+        temp.setDate(this.selectedDate.getDate() - 1);
         break;
       case 'Week':
-        this.selectedDate.setDate(this.selectedDate.getDate() - 7);
+        temp.setDate(temp.getDate() - 7);
         break;
       case 'Month':
-        this.selectedDate.setMonth(this.selectedDate.getMonth() - 1);
+        temp.setMonth(temp.getMonth() - 1);
         break;
     }
+    this.selectedDate = new Date(temp);
     this.dateChanged.emit(new Date(this.selectedDate));
   }
 
   nextDate(): void {
+    const temp = this.selectedDate;
     switch (this.selectedView) {
       case 'Day':
-        this.selectedDate.setDate(this.selectedDate.getDate() + 1);
+        temp.setDate(this.selectedDate.getDate() + 1);
         break;
       case 'Week':
-        this.selectedDate.setDate(this.selectedDate.getDate() + 7);
+        temp.setDate(temp.getDate() + 7);
         break;
       case 'Month':
-        this.selectedDate.setMonth(this.selectedDate.getMonth() + 1);
+        temp.setMonth(temp.getMonth() + 1);
         break;
     }
+    this.selectedDate = new Date(temp);
     this.dateChanged.emit(new Date(this.selectedDate));
   }
 
-  onViewChange(view: string): void {
+  onViewChange(view: 'Day' | 'Week' | 'Month' = 'Day') {
     this.selectedView = view;
     this.viewChanged.emit(this.selectedView);
   }
