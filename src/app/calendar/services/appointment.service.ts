@@ -13,17 +13,17 @@ export class AppointmentService {
     return this.appointmentsSubject.getValue();
   }
 
-  addAppointment(appointment: Appointment): void {
+  addAppointment(appointment: Appointment) {
     const appointments = this.getAppointments();
     this.appointmentsSubject.next([...appointments, appointment]);
   }
 
-  deleteAppointment(id: number): void {
+  deleteAppointment(id: number) {
     const appointments = this.getAppointments().filter((appt) => appt.id !== id);
     this.appointmentsSubject.next(appointments);
   }
 
-  updateAppointment(updatedAppointment: Appointment): void {
+  updateAppointment(updatedAppointment: Appointment) {
     const appointments = this.getAppointments().map((appt) =>
       appt.id === updatedAppointment.id ? updatedAppointment : appt
     );

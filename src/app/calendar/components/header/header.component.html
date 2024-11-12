@@ -5,10 +5,10 @@
     <button mat-icon-button (click)="previousDate()">
       <mat-icon>chevron_left</mat-icon>
     </button>
-    <span style="font-size: 0.625em">{{ selectedDate | date: 'MMMM d, y' }}</span>
     <button mat-icon-button (click)="nextDate()">
       <mat-icon>chevron_right</mat-icon>
     </button>
+    <span>{{ selectedDate | date: 'MMMM d, y' }}</span>
   </div>
   <span style="flex: 1 1 auto"></span>
   <mat-form-field subscriptSizing="dynamic" style="width: 100px" appearance="outline">

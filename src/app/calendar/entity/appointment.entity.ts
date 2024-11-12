@@ -6,3 +6,5 @@ export interface Appointment {
   endTime: string;
   description?: string;
 }
+
+export type AppointmentData = Partial<Appointment>;

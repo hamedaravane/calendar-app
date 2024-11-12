@@ -1,8 +1,8 @@
-<h2 mat-dialog-title>{{ data.appointment ? 'Edit' : 'Create' }} Appointment</h2>
+<h2 mat-dialog-title>{{ data ? 'Edit' : 'Create' }} Appointment</h2>
 <mat-dialog-content [formGroup]="appointmentForm">
   <mat-form-field appearance="fill">
     <mat-label>Title</mat-label>
-    <input matInput formControlName="title" />
+    <input matInput formControlName="title" required/>
     <mat-error *ngIf="appointmentForm.get('title')?.hasError('required')">
       Title is required
     </mat-error>
@@ -10,9 +10,14 @@
 
   <mat-form-field appearance="fill">
     <mat-label>Date</mat-label>
-    <input matInput [matDatepicker]="picker" formControlName="date" />
-    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-datepicker touchUi #picker></mat-datepicker>
+    <input
+      matInput
+      [matDatepicker]="datePicker"
+      formControlName="date"
+      required
+    />
+    <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+    <mat-datepicker #datePicker></mat-datepicker>
     <mat-error *ngIf="appointmentForm.get('date')?.hasError('required')">
       Date is required
     </mat-error>
@@ -20,28 +25,48 @@
 
   <mat-form-field appearance="fill">
     <mat-label>Start Time</mat-label>
-    <input matInput formControlName="startTime" placeholder="HH:mm" />
+    <input
+      matInput
+      formControlName="startTime"
+      required
+    />
     <mat-error *ngIf="appointmentForm.get('startTime')?.hasError('required')">
-      Start Time is required
+      Start time is required
     </mat-error>
   </mat-form-field>
 
   <mat-form-field appearance="fill">
     <mat-label>End Time</mat-label>
-    <input matInput formControlName="endTime" placeholder="HH:mm" />
-    <mat-error *ngIf="appointmentForm.get('endTime')?.hasError('required')">
-      End Time is required
+    <input
+      matInput
+      formControlName="endTime"
+      required
+    />
+    <mat-error *ngIf="appointmentForm.get('endTime')?.errors">
+      <span *ngIf="appointmentForm.get('endTime')?.hasError('required')">
+        End time is required
+      </span>
     </mat-error>
   </mat-form-field>
-
   <mat-form-field appearance="fill">
     <mat-label>Description</mat-label>
     <textarea matInput formControlName="description"></textarea>
   </mat-form-field>
+  <mat-error *ngIf="appointmentForm.errors">
+      <span *ngIf="appointmentForm.hasError('endTimeBeforeStartTime')">
+        End time must be after start time
+      </span>
+  </mat-error>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-  <button mat-button (click)="cancel()">Cancel</button>
-  <button mat-button color="primary" (click)="save()" [disabled]="!appointmentForm.valid">
+  <button mat-button type="button" (click)="cancel()">Cancel</button>
+  <button
+    mat-raised-button
+    color="primary"
+    type="submit"
+    (click)="save()"
+    [disabled]="appointmentForm.invalid"
+  >
     Save
   </button>
 </mat-dialog-actions>

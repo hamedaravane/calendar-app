@@ -10,6 +10,7 @@ import {DatePipe, NgForOf} from '@angular/common';
   standalone: true,
   selector: 'app-header',
   templateUrl: './header.component.html',
+  styleUrl: './header.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatToolbarModule, MatButtonModule, MatIconModule, MatFormFieldModule, MatSelectModule, DatePipe, NgForOf]
 })
@@ -18,7 +19,7 @@ export class HeaderComponent {
   @Output() viewChanged = new EventEmitter<'Day' | 'Week' | 'Month'>();
 
   selectedDate = new Date();
-  selectedView: 'Day' | 'Week' | 'Month' = 'Day';
+  selectedView: 'Day' | 'Week' | 'Month' = 'Week';
 
   goToToday(): void {
     this.selectedDate = new Date();
