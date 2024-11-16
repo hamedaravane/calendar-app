@@ -1,0 +1,41 @@
+<div class="calendar">
+  <div class="week-days">
+    <div
+      class="day-name"
+      *ngFor="let dayName of ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']"
+    >
+      {{ dayName }}
+    </div>
+  </div>
+  <div class="weeks">
+    <div class="week" *ngFor="let week of weeks">
+      <div
+        class="day"
+        *ngFor="let day of week; trackBy: trackByDate"
+        [class.other-month]="day.getMonth() !== currentDate.getMonth()"
+        (click)="openAppointmentFormForDay(day)"
+        cdkDropList
+        [cdkDropListData]="getAppointmentsForDay(day)"
+        [cdkDropListConnectedTo]="connectedDropLists"
+        [id]="getDropListId(day)"
+        (cdkDropListDropped)="onAppointmentDropped($event, day)"
+      >
+        <div class="date-header">
+          <span [class.today]="isToday(day)">{{ day.getDate() }}</span>
+        </div>
+        <div class="appointments">
+          @for (appointment of getAppointmentsForDay(day); track appointment.id) {
+            <div
+              class="appointment"
+              cdkDrag
+              [cdkDragData]="appointment"
+              (click)="openAppointmentForm(appointment, $event)"
+            >
+              <div class="appointment-title">{{ appointment.title }}</div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

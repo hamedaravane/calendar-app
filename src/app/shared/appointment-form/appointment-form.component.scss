@@ -1,0 +1,21 @@
+mat-form-field {
+  width: 100%;
+}
+
+mat-dialog-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.time-fields {
+  display: flex;
+  justify-content: space-between;
+
+  mat-form-field {
+    width: 48%;
+  }
+}
+
+mat-dialog-actions {
+  margin-top: 20px;
+}
