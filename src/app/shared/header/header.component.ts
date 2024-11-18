@@ -5,18 +5,32 @@ import { DateService } from '@services/date.service';
 import { AsyncPipe, DatePipe } from '@angular/common';
 import { filter, Observable } from 'rxjs';
 import { NavigationEnd, Router } from '@angular/router';
+import { MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [MatButtonModule, MatIconModule, DatePipe, AsyncPipe],
+  imports: [
+    MatButtonModule,
+    MatIconModule,
+    MatSelectModule,
+    MatFormFieldModule,
+    DatePipe,
+    AsyncPipe,
+    ReactiveFormsModule,
+  ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })
 export class HeaderComponent implements OnInit {
   currentView: 'day' | 'week' | 'month' | 'year' = 'month';
+  views: ('day' | 'week' | 'month' | 'year')[] = ['year', 'month', 'week', 'day'];
   viewBasedDateFormat = 'MMMM yyyy';
   currentDate$: Observable<Date>;
+
+  viewFormControl = new FormControl<'day' | 'week' | 'month' | 'year'>('month', Validators.required);
 
   constructor(
     private dateService: DateService,
@@ -38,25 +52,24 @@ export class HeaderComponent implements OnInit {
         this.currentView = 'year';
       }
     });
-  }
-
-  changeView(view: 'day' | 'week' | 'month' | 'year') {
-    this.router.navigate(['/', view]);
-    this.currentView = view;
-    switch (view) {
-      case 'day':
-        this.viewBasedDateFormat = 'EEEE, MMMM dd';
-        break;
-      case 'week':
-        this.viewBasedDateFormat = 'MMMM dd';
-        break;
-      case 'year':
-        this.viewBasedDateFormat = 'yyyy';
-        break;
-      default:
-        this.viewBasedDateFormat = 'MMMM yyyy';
-        break;
-    }
+    this.viewFormControl.valueChanges.pipe(filter(Boolean)).subscribe(view => {
+      this.router.navigate(['/', view]);
+      this.currentView = view;
+      switch (view) {
+        case 'day':
+          this.viewBasedDateFormat = 'EEEE, MMMM dd';
+          break;
+        case 'week':
+          this.viewBasedDateFormat = 'MMMM dd';
+          break;
+        case 'year':
+          this.viewBasedDateFormat = 'yyyy';
+          break;
+        default:
+          this.viewBasedDateFormat = 'MMMM yyyy';
+          break;
+      }
+    });
   }
 
   goToToday(): void {
