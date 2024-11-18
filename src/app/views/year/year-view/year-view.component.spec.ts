@@ -1,6 +1,6 @@
-import {ComponentFixture, TestBed} from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import {YearViewComponent} from './year-view.component';
+import { YearViewComponent } from './year-view.component';
 
 describe('YearViewComponent', () => {
   let component: YearViewComponent;
@@ -8,9 +8,8 @@ describe('YearViewComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [YearViewComponent]
-    })
-    .compileComponents();
+      imports: [YearViewComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(YearViewComponent);
     component = fixture.componentInstance;

@@ -1,26 +1,19 @@
-import {Component, OnInit} from '@angular/core';
-import {Appointment, AppointmentService} from '@services/appointment.service';
-import {MatDialog} from '@angular/material/dialog';
-import {AppointmentFormComponent} from '@shared/appointment-form/appointment-form.component';
-import {MatIconModule} from '@angular/material/icon';
-import {MatButtonModule} from '@angular/material/button';
-import {AsyncPipe, DatePipe, NgForOf} from '@angular/common';
-import {CdkDragDrop, DragDropModule, transferArrayItem} from '@angular/cdk/drag-drop';
-import {DateService} from '@services/date.service';
+import { Component, OnInit } from '@angular/core';
+import { Appointment, AppointmentService } from '@services/appointment.service';
+import { MatDialog } from '@angular/material/dialog';
+import { AppointmentFormComponent } from '@shared/appointment-form/appointment-form.component';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { AsyncPipe, DatePipe, NgForOf } from '@angular/common';
+import { CdkDragDrop, DragDropModule, transferArrayItem } from '@angular/cdk/drag-drop';
+import { DateService } from '@services/date.service';
 
 @Component({
   selector: 'app-month-view',
   standalone: true,
-  imports: [
-    MatIconModule,
-    MatButtonModule,
-    DatePipe,
-    NgForOf,
-    DragDropModule,
-    AsyncPipe,
-  ],
+  imports: [MatIconModule, MatButtonModule, DatePipe, NgForOf, DragDropModule, AsyncPipe],
   templateUrl: './month-view.component.html',
-  styleUrl: './month-view.component.scss'
+  styleUrl: './month-view.component.scss',
 })
 export class MonthViewComponent implements OnInit {
   weeks: Date[][] = [];
@@ -35,7 +28,7 @@ export class MonthViewComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.dateService.currentDate$.subscribe((date) => {
+    this.dateService.currentDate$.subscribe(date => {
       this.currentDate = date;
       this.generateCalendar();
       this.loadAppointments();
@@ -45,11 +38,7 @@ export class MonthViewComponent implements OnInit {
   generateCalendar(): void {
     this.weeks = [];
     this.connectedDropLists = [];
-    const firstDayOfMonth = new Date(
-      this.currentDate.getFullYear(),
-      this.currentDate.getMonth(),
-      1
-    );
+    const firstDayOfMonth = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1);
     const startDate = new Date(firstDayOfMonth);
     startDate.setDate(startDate.getDate() - startDate.getDay());
 
@@ -75,9 +64,9 @@ export class MonthViewComponent implements OnInit {
   }
 
   loadAppointments(): void {
-    this.appointmentService.appointments$.subscribe((appointments) => {
+    this.appointmentService.appointments$.subscribe(appointments => {
       this.appointmentsByDate = {};
-      appointments.forEach((appointment) => {
+      appointments.forEach(appointment => {
         const dateKey = new Date(appointment.start).toDateString();
         if (!this.appointmentsByDate[dateKey]) {
           this.appointmentsByDate[dateKey] = [];
@@ -103,7 +92,7 @@ export class MonthViewComponent implements OnInit {
       },
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
+    dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.appointmentService.addAppointment(result);
       }
@@ -112,18 +101,7 @@ export class MonthViewComponent implements OnInit {
 
   openAppointmentForm(appointment: Appointment, event: Event): void {
     event.stopPropagation();
-    const dialogRef = this.dialog.open(AppointmentFormComponent, {
-      width: '400px',
-      data: appointment,
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.appointmentService.updateAppointment(result);
-      } else if (result === false) {
-        this.appointmentService.deleteAppointment(appointment.id);
-      }
-    });
+    this.appointmentService.openAppointmentForm(appointment, this.dialog);
   }
 
   isToday(day: Date): boolean {
@@ -160,12 +138,7 @@ export class MonthViewComponent implements OnInit {
 
     this.appointmentService.updateAppointment(updatedAppointment);
 
-    transferArrayItem(
-      event.previousContainer.data,
-      event.container.data,
-      event.previousIndex,
-      event.currentIndex
-    );
+    transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
   }
 
   trackByDate(index: number, item: Date): string {

@@ -1,0 +1,50 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #3f51b5;
+  color: #fff;
+  font-family: Roboto, Arial, sans-serif;
+
+  .navigation {
+    display: flex;
+    align-items: center;
+
+    .date-display {
+      font-size: 18px;
+      font-weight: 500;
+      margin: 0 15px;
+    }
+
+    button {
+      color: #fff;
+    }
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    button {
+      font-size: 14px;
+      font-weight: 500;
+      color: #fff;
+      border: none;
+      background: none;
+      cursor: pointer;
+      padding: 5px 10px;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+
+      &.active {
+        background-color: rgba(255, 255, 255, 0.3);
+      }
+    }
+  }
+}

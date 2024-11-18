@@ -1,0 +1,21 @@
+.footer {
+  text-align: center;
+  background-color: #3f51b5;
+  color: #fff;
+  padding: 10px 20px;
+  font-family: Roboto, Arial, sans-serif;
+  font-size: 14px;
+  margin-top: 1rem;
+
+  .footer-content {
+    margin: 0 auto;
+
+    p {
+      margin: 5px 0;
+
+      .heart {
+        color: #ff5252;
+      }
+    }
+  }
+}

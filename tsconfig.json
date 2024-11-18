@@ -25,10 +25,7 @@
       "@services/*": ["src/app/services/*"],
       "@views/*": ["src/app/views/*"]
     },
-    "lib": [
-      "ES2022",
-      "dom"
-    ]
+    "lib": ["ES2022", "dom"]
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

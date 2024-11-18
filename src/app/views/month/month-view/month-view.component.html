@@ -1,9 +1,6 @@
 <div class="calendar">
   <div class="week-days">
-    <div
-      class="day-name"
-      *ngFor="let dayName of ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']"
-    >
+    <div class="day-name" *ngFor="let dayName of ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']">
       {{ dayName }}
     </div>
   </div>
@@ -18,8 +15,7 @@
         [cdkDropListData]="getAppointmentsForDay(day)"
         [cdkDropListConnectedTo]="connectedDropLists"
         [id]="getDropListId(day)"
-        (cdkDropListDropped)="onAppointmentDropped($event, day)"
-      >
+        (cdkDropListDropped)="onAppointmentDropped($event, day)">
         <div class="date-header">
           <span [class.today]="isToday(day)">{{ day.getDate() }}</span>
         </div>
@@ -29,8 +25,7 @@
               class="appointment"
               cdkDrag
               [cdkDragData]="appointment"
-              (click)="openAppointmentForm(appointment, $event)"
-            >
+              (click)="openAppointmentForm(appointment, $event)">
               <div class="appointment-title">{{ appointment.title }}</div>
             </div>
           }

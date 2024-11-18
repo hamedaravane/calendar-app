@@ -1,0 +1,72 @@
+.year-view {
+  .header {
+    text-align: center;
+    font-size: 24px;
+    font-weight: 500;
+    padding: 20px 0;
+    background-color: #3f51b5;
+    color: #fff;
+    margin-bottom: 20px;
+  }
+
+  .months {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 0 20px;
+
+    .month {
+      flex: 1 0 20%;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      overflow: hidden;
+
+      .month-name {
+        text-align: center;
+        font-weight: 500;
+        background-color: #e3f2fd;
+        color: #0b57d0;
+        padding: 10px 0;
+        font-size: 16px;
+      }
+
+      .days {
+        display: grid;
+        grid: auto / repeat(6, 1fr);
+
+        .day {
+          text-align: center;
+          padding: 10px 0;
+          font-size: 12px;
+          font-weight: 500;
+          color: #616161;
+          cursor: pointer;
+          background-color: #fff;
+          position: relative;
+
+          &:hover {
+            background-color: #f1f8e9;
+          }
+
+          &.today {
+            background-color: #e3f2fd;
+            color: #0b57d0;
+            font-weight: bold;
+          }
+
+          span {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            line-height: 24px;
+            border-radius: 50%;
+          }
+        }
+
+        .day:last-child {
+          border-right: none;
+        }
+      }
+    }
+  }
+}

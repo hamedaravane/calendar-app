@@ -1,6 +1,6 @@
-import {ComponentFixture, TestBed} from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import {MonthViewComponent} from './month-view.component';
+import { MonthViewComponent } from './month-view.component';
 
 describe('MonthViewComponent', () => {
   let component: MonthViewComponent;
@@ -8,9 +8,8 @@ describe('MonthViewComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MonthViewComponent]
-    })
-    .compileComponents();
+      imports: [MonthViewComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(MonthViewComponent);
     component = fixture.componentInstance;

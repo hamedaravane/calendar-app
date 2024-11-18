@@ -1,1 +1,43 @@
-<p>week-view works!</p>
+<div class="week-view">
+  <div class="header-row">
+    <div class="time-cell header-cell"></div>
+    <div class="day-cell header-cell" *ngFor="let day of weekDays" [class.today]="isToday(day)">
+      {{ day | date: 'EEE dd' }}
+    </div>
+  </div>
+  <div class="body">
+    <div class="time-column">
+      <div class="time-cell" *ngFor="let hour of hours">{{ hour }}:00</div>
+    </div>
+    <div class="days">
+      <div
+        class="day-column"
+        *ngFor="let day of weekDays"
+        [class.today]="isToday(day)"
+        cdkDropList
+        [cdkDropListData]="getAppointmentsForDay(day)"
+        [cdkDropListConnectedTo]="connectedDropLists"
+        [id]="getDropListId(day)"
+        (cdkDropListDropped)="onAppointmentDropped($event, day)"
+        (click)="openAppointmentFormForSlot(day, 0)">
+        <div class="day-grid">
+          <div class="hour-cell" *ngFor="let hour of hours"></div>
+        </div>
+        @for (appointment of getAppointmentsForDay(day); track appointment.id) {
+          <div
+            class="appointment"
+            cdkDrag
+            [cdkDragData]="appointment"
+            (click)="openAppointmentForm(appointment, $event)"
+            [ngStyle]="{
+              top: appointment.startTime * 60 + 'px',
+              height: ((appointment.endTime - appointment.startTime) * 60) + 'px',
+            }">
+            <div class="appointment-title">{{ appointment.title }}</div>
+            <div class="appointment-time">{{ appointment.startTime }}:00 - {{ appointment.endTime }}:00</div>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>

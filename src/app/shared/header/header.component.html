@@ -1,1 +1,21 @@
-<p>header works!</p>
+<div class="header">
+  <div class="navigation">
+    <button mat-icon-button (click)="previousPeriod()">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+    <div class="date-display">
+      {{ currentDate$ | async | date: viewBasedDateFormat }}
+    </div>
+    <button mat-icon-button (click)="nextPeriod()">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+  </div>
+
+  <div class="actions">
+    <button mat-button (click)="goToToday()">Today</button>
+    <button mat-button [class.active]="currentView === 'year'" (click)="changeView('year')">Year</button>
+    <button mat-button [class.active]="currentView === 'month'" (click)="changeView('month')">Month</button>
+    <button mat-button [class.active]="currentView === 'week'" (click)="changeView('week')">Week</button>
+    <button mat-button [class.active]="currentView === 'day'" (click)="changeView('day')">Day</button>
+  </div>
+</div>
