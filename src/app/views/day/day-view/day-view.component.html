@@ -1,32 +1,36 @@
 <div class="day-view">
   <div class="header">
-    <div class="date-label">
-      {{ currentDate | date: 'EEEE, MMMM d, yyyy' }}
-    </div>
+    <div class="date-display">{{ currentDate | date: 'EEEE, MMMM d, yyyy' }}</div>
   </div>
-  <div class="hours">
-    <div class="hour-row" *ngFor="let hour of hours">
-      <div class="hour-label">{{ hour }}:00</div>
-      <div
-        class="hour-slot"
-        cdkDropList
-        [cdkDropListData]="getAppointmentsForHour(hour)"
-        (cdkDropListDropped)="onAppointmentDropped($event, hour)"
-        (click)="openAppointmentFormForHour(hour)">
+  <div class="body">
+    <div class="time-column">
+      <div class="time-cell" *ngFor="let hour of hours">{{ hour }}:00</div>
+    </div>
+    <div
+      class="day-column"
+      cdkDropList
+      [cdkDropListData]="getAppointmentsForDay(currentDate)"
+      [cdkDropListConnectedTo]="connectedDropLists"
+      [id]="getDropListId(currentDate)"
+      (cdkDropListDropped)="onAppointmentDropped($event, currentDate)"
+      (click)="openAppointmentFormForHour(0)">
+      <div class="day-grid">
+        <div class="hour-cell" *ngFor="let hour of hours"></div>
+      </div>
+      @for (appointment of getAppointmentsForDay(currentDate); track appointment.id) {
         <div
           class="appointment"
-          *ngFor="let appointment of getAppointmentsForHour(hour)"
           cdkDrag
           [cdkDragData]="appointment"
           [ngStyle]="{
-              top: appointment.startTime * 60 + 'px',
-              height: ((appointment.endTime - appointment.startTime) * 60) + 'px',
-            }"
+            top: appointment.startTime * 60 + 'px',
+            height: ((appointment.endTime - appointment.startTime) * 60) + 'px',
+          }"
           (click)="openAppointmentForm(appointment, $event)">
           <div class="appointment-title">{{ appointment.title }}</div>
           <div class="appointment-time">{{ appointment.startTime }}:00 - {{ appointment.endTime }}:00</div>
         </div>
-      </div>
+      }
     </div>
   </div>
 </div>

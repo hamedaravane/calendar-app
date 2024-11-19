@@ -4,7 +4,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { DateService } from '@services/date.service';
 import { AsyncPipe, DatePipe } from '@angular/common';
 import { filter, Observable } from 'rxjs';
-import { NavigationEnd, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -34,23 +34,35 @@ export class HeaderComponent implements OnInit {
 
   constructor(
     private dateService: DateService,
-    private router: Router
+    private router: Router,
+    private activatedRoute: ActivatedRoute
   ) {
     this.currentDate$ = this.dateService.currentDate$;
   }
 
   ngOnInit() {
+    this.activatedRoute.url.subscribe(segments => {
+      const r = segments.map(segment => segment.path).join('/');
+      console.log('Current Route:', r);
+    });
     this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(() => {
       const url = this.router.url.split('?')[0];
-      if (url.startsWith('/day')) {
-        this.currentView = 'day';
-      } else if (url.startsWith('/week')) {
-        this.currentView = 'week';
-      } else if (url.startsWith('/month')) {
-        this.currentView = 'month';
-      } else if (url.startsWith('/year')) {
-        this.currentView = 'year';
+      console.log('router events: ', url);
+      switch (true) {
+        case url.startsWith('/day'):
+          this.currentView = 'day';
+          break;
+        case url.startsWith('/week'):
+          this.currentView = 'week';
+          break;
+        case url.startsWith('/year'):
+          this.currentView = 'year';
+          break;
+        default:
+          this.currentView = 'month';
+          break;
       }
+      this.viewFormControl.setValue(this.currentView);
     });
     this.viewFormControl.valueChanges.pipe(filter(Boolean)).subscribe(view => {
       this.router.navigate(['/', view]);
