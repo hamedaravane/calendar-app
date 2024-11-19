@@ -1,15 +1,11 @@
+// @ts-check
 const eslint = require("@eslint/js");
 const tseslint = require("typescript-eslint");
 const angular = require("angular-eslint");
-const unusedImports = require("eslint-plugin-unused-imports");
 
 module.exports = tseslint.config(
   {
     files: ["**/*.ts"],
-    plugins: {
-      // @ts-ignore
-      "unused-imports": unusedImports,
-    },
     extends: [
       eslint.configs.recommended,
       ...tseslint.configs.recommended,
@@ -18,15 +14,20 @@ module.exports = tseslint.config(
     ],
     processor: angular.processInlineTemplates,
     rules: {
-      "no-unused-vars": "off",
-      "unused-imports/no-unused-imports": "error",
-      "unused-imports/no-unused-vars": [
-        "warn",
+      "@angular-eslint/directive-selector": [
+        "error",
         {
-          vars: "all",
-          varsIgnorePattern: "^_",
-          args: "after-used",
-          argsIgnorePattern: "^_",
+          type: "attribute",
+          prefix: "app",
+          style: "camelCase",
+        },
+      ],
+      "@angular-eslint/component-selector": [
+        "error",
+        {
+          type: "element",
+          prefix: "app",
+          style: "kebab-case",
         },
       ],
     },

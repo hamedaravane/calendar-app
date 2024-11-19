@@ -24,7 +24,7 @@
           [cdkDragData]="appointment"
           [ngStyle]="{
             top: appointment.startTime * 60 + 'px',
-            height: ((appointment.endTime - appointment.startTime) * 60) + 'px',
+            height: (appointment.endTime - appointment.startTime) * 60 + 'px',
           }"
           (click)="openAppointmentForm(appointment, $event)">
           <div class="appointment-title">{{ appointment.title }}</div>

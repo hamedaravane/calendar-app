@@ -31,7 +31,7 @@
             (click)="openAppointmentForm(appointment, $event)"
             [ngStyle]="{
               top: appointment.startTime * 60 + 'px',
-              height: ((appointment.endTime - appointment.startTime) * 60) + 'px',
+              height: (appointment.endTime - appointment.startTime) * 60 + 'px',
             }">
             <div class="appointment-title">{{ appointment.title }}</div>
             <div class="appointment-time">{{ appointment.startTime }}:00 - {{ appointment.endTime }}:00</div>
